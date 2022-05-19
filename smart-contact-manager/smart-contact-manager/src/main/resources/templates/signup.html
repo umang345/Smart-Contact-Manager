@@ -12,23 +12,37 @@
 				<div class="col-md-8 offset-md-2">
 					<div class="my-card mt-2">
 					
+						<div th:if="${session.message}" th:classappend="${session.message.type}" class="alert alert-primary" role="alert">
+						  <p class="text-center" th:text="${session.message.content}"></p>
+						  
+						  <th:block th:text="${#session.removeAttribute('message')}"></th:block>
+						</div>
+					
 					    <div class="container text-center">
 					    	<img style="width:80px" alt="" th:src="@{/img/register_icon.png}" src="">
 					    </div>
 					
 						<h1 class="text-center">Register Here</h1>
 						
-						<form action="" th:action="@{/do_register}" method="post">
+						<form novalidate action="" th:action="@{/do_register}" method="post" th:object="${user}">
 							<!-- Name field -->
 							<div class="form-group">
 							    <label for="name_field">Name</label>
 							    
-							    <input type="text" 
-							           class="form-control" 
+							    <input 
+							           name="name" 
+							           type="text" 
+							           class="form-control"
+							           th:classappend = "${#fields.hasErrors('name') ? 'is-invalid' : ''}" 
 							           id="name_field" 
 							           aria-describedby="emailHelp" 
 							           placeholder="Enter your name"
-							           required>
+							           required
+							           th:value="${user.name}">
+							     
+							     <div class="invalid-feedback" th:each="e : ${#fields.errors('name')}" th:text="${e}">
+							        
+							     </div>
 							           
 							 </div>
 						
@@ -36,12 +50,21 @@
 							<div class="form-group">
 							    <label for="email_field">Email</label>
 							    
-							    <input type="email" 
+							    <input 
+							    	   name="email"
+							           type="email" 
 							           class="form-control" 
+							           th:classappend = "${#fields.hasErrors('email') ? 'is-invalid' : ''}" 
 							           id="email_field" 
 							           aria-describedby="emailHelp" 
 							           placeholder="Enter your email"
-							           required>
+							           required
+							           th:value="${user.email}">
+							           
+							     <div class="invalid-feedback" th:each="e : ${#fields.errors('email')}" th:text="${e}">
+							        
+							     </div>
+							     
 							           
 							 </div>
 							 
@@ -49,12 +72,19 @@
 							<div class="form-group">
 							    <label for="password_field">Password</label>
 							    
-							    <input type="password" 
+							    <input name="password"
+							           type="password" 
 							           class="form-control" 
 							           id="password_field" 
+							           th:classappend = "${#fields.hasErrors('password') ? 'is-invalid' : ''}"
 							           aria-describedby="emailHelp" 
 							           placeholder="Enter your password"
-							           required>
+							           required
+							           >
+							           
+							     <div class="invalid-feedback" th:each="e : ${#fields.errors('password')}" th:text="${e}">
+							        
+							     </div>
 							           
 							 </div>
 							 
@@ -62,7 +92,22 @@
 							<div class="form-group">
 								<textarea class="form-control" 
 								          rows="10"
+								          name="about"
+								          th:text="${user.about}"
 								          placeholder="Tell us something about you"></textarea>
+							</div>
+							
+							<!-- Terms and condition agreement -->
+							<div class="form-group form-check">
+							
+								<input type="checkbox"
+								name="agreement"
+								class="form-check-input"
+								id="agreement"
+								>
+								
+								<label for="agreement">Accept Terms and Conditions</label>
+							
 							</div>
 							
 							<div class="container text-center">
